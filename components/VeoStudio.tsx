@@ -47,9 +47,6 @@ const VeoStudio: React.FC = () => {
     setStatusMessage("Kết nối Veo 3.1 Multi-Ref Engine...");
 
     try {
-      const hasKey = await (window as any).aistudio.hasSelectedApiKey();
-      if (!hasKey) await (window as any).aistudio.openSelectKey();
-
       const result = await geminiService.generateVideo(
         prompt, 
         aspectRatio, 
