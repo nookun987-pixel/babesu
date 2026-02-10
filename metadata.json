@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Project Mikage // Master Production Hub",
+  "description": "A high-fidelity production terminal for managing assets, technical architecture, and AI-powered creative expansion for the Project Mikage universe.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
