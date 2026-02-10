@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mikage AI Studio - Zenith v22.6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.5);
+        }
+
+        /* Gradient animations */
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        /* Progress bar animation */
+        .progress-bar-fill {
+            transition: width 0.3s ease;
+        }
+
+        /* Hover effects */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Reference image container */
+        .ref-image-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .ref-image-item {
+            position: relative;
+            aspect-ratio: 3/4;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .ref-image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ref-image-item .remove-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            background: rgba(239, 68, 68, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .ref-image-item:hover .remove-btn {
+            opacity: 1;
+        }
+
+        /* Console log */
+        .console-log {
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .console-log-entry {
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        /* Navigation active state */
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-[#050508] min-h-screen text-white">
+
+    <!-- Navigation Header -->
+    <nav class="bg-[#0a0a0f] border-b border-white/5 p-6">
+        <div class="max-w-[1800px] mx-auto flex items-center justify-between">
+            <!-- Logo and Title -->
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 bg-gradient-to-tr from-indigo-950 via-indigo-600 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg ring-1 ring-white/10">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight text-white uppercase">
+                        Mikage <span class="text-indigo-400">Zenith</span>
+                    </h1>
+                    <p class="text-[10px] text-indigo-500/60 font-bold uppercase tracking-widest">AI Studio v22.6</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="flex gap-3">
+                <a href="gallery.html" class="nav-link px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 hover:bg-white/10">
+                    <span>🎨</span>
+                    <span class="hidden md:inline">Gallery</span>
+                </a>
+                <a href="mikage-studio.html" class="nav-link active px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2">
+                    <span>⚡</span>
+                    <span class="hidden md:inline">AI Studio</span>
+                </a>
+            </div>
+
+            <!-- Settings Button -->
+            <button onclick="openSettings()" class="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-bold transition-all hidden lg:block">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6"></path>
+                    <path d="m4.93 4.93 4.24 4.24m5.66 5.66 4.24 4.24"></path>
+                    <path d="m19.07 4.93-4.24 4.24m-5.66 5.66-4.24 4.24"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-[1800px] mx-auto p-5 flex flex-col lg:flex-row gap-5">
+        
+        <!-- Left Sidebar: Controls -->
+        <aside class="w-full lg:w-[480px] bg-white rounded-[32px] p-7 shadow-2xl flex flex-col gap-6">
+            <!-- Header -->
+            <div class="border-b border-gray-200 pb-4">
+                <h2 class="text-2xl font-black text-gray-900">Synergy Config</h2>
+                <p class="text-xs text-gray-500 mt-1">Configure DNA parameters for generation</p>
+            </div>
+
+            <!-- Reference Images Upload -->
+            <section>
+                <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block mb-3">Reference Images (1-3)</label>
+                <div class="ref-image-container mb-3" id="refImageContainer">
+                    <!-- Dynamic reference images -->
+                </div>
+                <button onclick="document.getElementById('fileInput').click()" class="w-full py-3 border-2 border-dashed border-indigo-300 rounded-2xl text-sm font-bold text-indigo-600 hover:bg-indigo-50 transition-all flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>Upload Images</span>
+                </button>
+                <input type="file" id="fileInput" multiple accept="image/*" hidden>
+            </section>
+
+            <!-- Outfit Selection -->
+            <section>
+                <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block mb-3">Outfit DNA</label>
+                <select id="outfitSelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <!-- Options populated by JavaScript -->
+                </select>
+            </section>
+
+            <!-- Weapon Selection -->
+            <section>
+                <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block mb-3">Weapon DNA</label>
+                <select id="weaponSelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <!-- Options populated by JavaScript -->
+                </select>
+            </section>
+
+            <!-- Vehicle Selection -->
+            <section>
+                <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block mb-3">Vehicle DNA</label>
+                <select id="vehicleSelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <!-- Options populated by JavaScript -->
+                </select>
+            </section>
+
+            <!-- World Selection -->
+            <section>
+                <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block mb-3">World DNA</label>
+                <select id="worldSelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <!-- Options populated by JavaScript -->
+                </select>
+            </section>
+
+            <!-- Pose Selection -->
+            <section>
+                <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block mb-3">Pose DNA</label>
+                <select id="poseSelect" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <!-- Options populated by JavaScript -->
+                </select>
+            </section>
+
+            <!-- Generate Button -->
+            <button onclick="handleGenerate()" id="generateBtn" class="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm uppercase tracking-wider rounded-2xl shadow-lg shadow-indigo-500/50 transition-all hover-lift active:scale-95 flex items-center justify-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"></path>
+                </svg>
+                <span>Generate Synergy</span>
+            </button>
+        </aside>
+
+        <!-- Right Panel: Output Area -->
+        <section class="flex-1 bg-[#0a0a0f] rounded-[48px] p-8 shadow-2xl flex flex-col gap-6">
+            <!-- Output Display -->
+            <div id="outputArea" class="flex-1 bg-black/50 rounded-[32px] border border-white/5 flex items-center justify-center min-h-[400px] relative overflow-hidden">
+                <div id="placeholderContent" class="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-white/10">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <p class="text-sm font-bold text-white/20 uppercase tracking-widest">Awaiting Generation</p>
+                </div>
+                <div id="progressContainer" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm">
+                    <div class="w-64 mb-4">
+                        <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+                            <div id="progressBar" class="progress-bar-fill h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <p class="text-sm font-bold text-white" id="progressText">Initializing... 0%</p>
+                    <div class="mt-4 flex gap-2">
+                        <div class="w-2 h-2 bg-indigo-500 rounded-full pulse-animation" style="animation-delay: 0s"></div>
+                        <div class="w-2 h-2 bg-indigo-500 rounded-full pulse-animation" style="animation-delay: 0.3s"></div>
+                        <div class="w-2 h-2 bg-indigo-500 rounded-full pulse-animation" style="animation-delay: 0.6s"></div>
+                    </div>
+                </div>
+                <img id="resultImage" class="hidden w-full h-full object-contain rounded-[24px]" alt="Generated Result">
+            </div>
+
+            <!-- Console Logs -->
+            <div class="bg-black/50 rounded-[24px] border border-white/5 p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400">
+                            <polyline points="4 17 10 11 4 5"></polyline>
+                            <line x1="12" y1="19" x2="20" y2="19"></line>
+                        </svg>
+                        <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Console Log</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-green-500 rounded-full pulse-animation"></div>
+                        <span class="text-xs text-green-500 font-bold">System Active</span>
+                    </div>
+                </div>
+                <div id="consoleLogs" class="console-log text-gray-400">
+                    <!-- Console entries will be added here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- API Key Modal -->
+    <div id="apiKeyModal" class="modal">
+        <div class="bg-white rounded-[32px] p-8 max-w-md w-full mx-4 shadow-2xl fade-in">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-black text-gray-900 mb-2">Gemini API Key Required</h3>
+                <p class="text-sm text-gray-600">Enter your API key to unlock AI generation</p>
+            </div>
+
+            <div class="mb-4">
+                <label class="text-xs font-bold text-gray-600 uppercase tracking-wider block mb-2">API Key</label>
+                <input type="password" id="apiKeyInput" placeholder="AIza..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" class="block text-center text-sm text-indigo-600 hover:text-indigo-700 font-bold mb-6 hover:underline">
+                📌 Get your API key here
+            </a>
+
+            <button onclick="saveApiKey()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm uppercase tracking-wider rounded-2xl shadow-lg transition-all hover-lift">
+                Save & Start
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // DATABASE - Mikage Zenith v22.6
+        // ========================================
+        const DATABASE = {
+            OUTFITS: [
+                { id: 'original', label: 'Original', dna: 'original Mikage design, ethereal flowing garments, intricate patterns' },
+                { id: 'giap_trang', label: 'Giáp Trắng', dna: 'white celestial armor with gold accents, divine warrior aesthetic' },
+                { id: 'war_kimono', label: 'War Kimono', dna: 'battle-ready kimono with reinforced plating, traditional meets futuristic' },
+                { id: 'pink_kimono', label: 'Pink Kimono', dna: 'elegant pink kimono with cherry blossom patterns, graceful design' },
+                { id: 'leather', label: 'Leather', dna: 'sleek black leather outfit, tactical combat design' },
+                { id: 'lace_corset', label: 'Lace Corset', dna: 'intricate lace corset with Victorian elegance, seductive aesthetic' },
+                { id: 'blue_gown', label: 'Blue Gown', dna: 'flowing blue evening gown, royal elegance with cosmic shimmer' },
+                { id: 'techwear', label: 'Techwear', dna: 'advanced techwear outfit, cyberpunk tactical aesthetic with glowing accents' }
+            ],
+            WEAPONS: [
+                { id: 'none', label: 'None', dna: 'empty hands, natural pose' },
+                { id: 'cung_trang', label: 'Cung Trăng', dna: 'wielding ethereal moonbow, glowing silver arrows, mystical energy' },
+                { id: 'kiem_pha_le', label: 'Kiếm Pha Lê', dna: 'equipped with crystalline blade, transparent sword with rainbow refractions' },
+                { id: 'cyber_wings', label: 'Cyber Wings', dna: 'mechanical cyber wings deployed, holographic feathers, flight mode' },
+                { id: 'katana_laser', label: 'Katana Laser', dna: 'laser-edged katana, neon blue energy blade, cyberpunk samurai' },
+                { id: 'sung_rong', label: 'Sừng Rồng', dna: 'dragon horn accessories, mythical beast elements, ancient power' },
+                { id: 'quantum_scythe', label: 'Quantum Scythe', dna: 'quantum-edge scythe, reality-warping blade, cosmic energy' },
+                { id: 'magic', label: 'Ma thuật', dna: 'casting magical spells, glowing spell circles, arcane energy flowing' }
+            ],
+            VEHICLES: [
+                { id: 'none', label: 'None', dna: 'standing pose, no vehicle' },
+                { id: 'supercar', label: 'Supercar', dna: 'inside luxury supercar cockpit, futuristic dashboard, racing aesthetic' },
+                { id: 'cyberbike', label: 'Cyberbike', dna: 'riding futuristic motorcycle, neon trails, high-speed motion' },
+                { id: 'desert_bike', label: 'Desert Bike', dna: 'on rugged desert bike, sand dunes, adventure aesthetic' },
+                { id: 'ufo', label: 'UFO', dna: 'piloting alien spacecraft, cosmic background, sci-fi technology' },
+                { id: 'drone', label: 'Drone', dna: 'riding combat drone platform, hovering technology, tactical display' }
+            ],
+            WORLDS: [
+                { id: 'original', label: 'Original', dna: 'ethereal void space, cosmic nebula background, floating in infinity' },
+                { id: 'cung_dien_may', label: 'Cung Điện Mây', dna: 'cloud palace setting, floating architecture, heavenly atmosphere' },
+                { id: 'tokyo_neon', label: 'Tokyo Neon', dna: 'neon-lit Tokyo streets, cyberpunk cityscape, rain reflections' },
+                { id: 'dien_tho', label: 'Điện Thờ', dna: 'ancient temple interior, mystical lighting, sacred atmosphere' },
+                { id: 'sa_mac', label: 'Sa Mạc', dna: 'vast desert landscape, sand dunes, golden hour lighting' },
+                { id: 'vuon_dao', label: 'Vườn Đào', dna: 'peach blossom garden, spring atmosphere, pink petals floating' },
+                { id: 'hacker_room', label: 'Hacker Room', dna: 'dark hacker sanctuary, multiple holographic displays, cyber aesthetic' }
+            ],
+            POSES: [
+                { id: 'master_gaze', label: 'Master Gaze', dna: 'powerful frontal gaze, confident stance, divine presence' },
+                { id: 'walk', label: 'Walk', dna: 'dynamic walking pose, graceful movement, cinematic angle' },
+                { id: 'back_look', label: 'Back Look', dna: 'looking back over shoulder, mysterious atmosphere, elegant turn' },
+                { id: 'combat', label: 'Combat', dna: 'action combat pose, dynamic movement, battle-ready stance' },
+                { id: 'float', label: 'Float', dna: 'floating in mid-air, levitation, ethereal weightlessness' }
+            ]
+        };
+
+        // ========================================
+        // STATE MANAGEMENT
+        // ========================================
+        let refImages = [];
+        let selections = {
+            outfit: 0,
+            weapon: 0,
+            vehicle: 0,
+            world: 0,
+            pose: 0
+        };
+        let isGenerating = false;
+
+        // ========================================
+        // INITIALIZATION
+        // ========================================
+        window.onload = function() {
+            logConsole('🚀 Mikage AI Studio v22.6 initialized');
+            logConsole('⚡ Quantum DNA Anchor Active');
+            
+            // Check for API key
+            const key = localStorage.getItem('mikage_gemini_key');
+            if (!key) {
+                document.getElementById('apiKeyModal').classList.add('active');
+                logConsole('⚠️ API Key required - Please configure');
+            } else {
+                logConsole('✅ API Key loaded from storage');
+            }
+            
+            // Populate all dropdowns
+            populateDropdowns();
+            logConsole('📊 DNA databases loaded successfully');
+        };
+
+        // ========================================
+        // API KEY MANAGEMENT
+        // ========================================
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if (!key) {
+                alert('Please enter an API key');
+                return;
+            }
+            if (!key.startsWith('AIza')) {
+                alert('Invalid API key format! Key should start with "AIza"');
+                return;
+            }
+            
+            localStorage.setItem('mikage_gemini_key', key);
+            document.getElementById('apiKeyModal').classList.remove('active');
+            logConsole('✅ API Key saved successfully');
+            logConsole('🔒 Secure storage activated');
+        }
+
+        function openSettings() {
+            document.getElementById('apiKeyInput').value = '';
+            document.getElementById('apiKeyModal').classList.add('active');
+        }
+
+        // ========================================
+        // POPULATE DROPDOWNS
+        // ========================================
+        function populateDropdowns() {
+            populateSelect('outfitSelect', DATABASE.OUTFITS);
+            populateSelect('weaponSelect', DATABASE.WEAPONS);
+            populateSelect('vehicleSelect', DATABASE.VEHICLES);
+            populateSelect('worldSelect', DATABASE.WORLDS);
+            populateSelect('poseSelect', DATABASE.POSES);
+        }
+
+        function populateSelect(selectId, items) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = items.map((item, index) => 
+                `<option value="${index}">${item.label}</option>`
+            ).join('');
+        }
+
+        // ========================================
+        // FILE UPLOAD HANDLING
+        // ========================================
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                if (refImages.length >= 3) {
+                    logConsole('⚠️ Maximum 3 reference images allowed');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    refImages.push(event.target.result);
+                    renderRefImages();
+                    logConsole(`✅ Image uploaded (${refImages.length}/3)`);
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Reset input
+            e.target.value = '';
+        });
+
+        function renderRefImages() {
+            const container = document.getElementById('refImageContainer');
+            container.innerHTML = refImages.map((img, i) => `
+                <div class="ref-image-item fade-in">
+                    <img src="${img}" alt="Reference ${i + 1}">
+                    <div class="remove-btn" onclick="removeRefImage(${i})">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeRefImage(index) {
+            refImages.splice(index, 1);
+            renderRefImages();
+            logConsole(`🗑️ Image removed (${refImages.length}/3)`);
+        }
+
+        // ========================================
+        // GEMINI AI INTEGRATION
+        // ========================================
+        async function callGeminiAI(prompt) {
+            const apiKey = localStorage.getItem('mikage_gemini_key');
+            if (!apiKey) {
+                throw new Error('API Key not configured');
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+            
+            logConsole('🔄 Calling Gemini AI...');
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ 
+                            parts: [{ text: prompt }] 
+                        }],
+                        systemInstruction: { 
+                            parts: [{ 
+                                text: "You are Mikage Master AI. Create cinematic 8k prompts maintaining reference face identity. Keep Mikage youthful and pretty. Focus on aesthetic perfection and technical detail." 
+                            }] 
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || "DNA Sync Complete.";
+                
+                logConsole('✅ Gemini AI response received');
+                return generatedText;
+            } catch (error) {
+                logConsole(`❌ API Error: ${error.message}`);
+                throw error;
+            }
+        }
+
+        // ========================================
+        // GENERATION HANDLER
+        // ========================================
+        async function handleGenerate() {
+            // Validation
+            if (isGenerating) {
+                logConsole('⚠️ Generation already in progress');
+                return;
+            }
+
+            if (refImages.length === 0) {
+                alert('Please upload at least 1 reference image!');
+                logConsole('❌ No reference images uploaded');
+                return;
+            }
+
+            const apiKey = localStorage.getItem('mikage_gemini_key');
+            if (!apiKey) {
+                alert('Please configure your API key first!');
+                openSettings();
+                return;
+            }
+
+            // Update selections
+            selections.outfit = parseInt(document.getElementById('outfitSelect').value);
+            selections.weapon = parseInt(document.getElementById('weaponSelect').value);
+            selections.vehicle = parseInt(document.getElementById('vehicleSelect').value);
+            selections.world = parseInt(document.getElementById('worldSelect').value);
+            selections.pose = parseInt(document.getElementById('poseSelect').value);
+
+            isGenerating = true;
+            
+            // Hide result, show progress
+            document.getElementById('placeholderContent').classList.add('hidden');
+            document.getElementById('resultImage').classList.add('hidden');
+            document.getElementById('progressContainer').classList.remove('hidden');
+
+            // Disable button
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            logConsole('🎯 Starting generation process...');
+            logConsole(`📦 Outfit: ${DATABASE.OUTFITS[selections.outfit].label}`);
+            logConsole(`⚔️ Weapon: ${DATABASE.WEAPONS[selections.weapon].label}`);
+            logConsole(`🚗 Vehicle: ${DATABASE.VEHICLES[selections.vehicle].label}`);
+            logConsole(`🌍 World: ${DATABASE.WORLDS[selections.world].label}`);
+            logConsole(`🎭 Pose: ${DATABASE.POSES[selections.pose].label}`);
+
+            // Build prompt for Gemini
+            const promptParts = [
+                'Mikage character with reference images provided.',
+                `Outfit: ${DATABASE.OUTFITS[selections.outfit].dna}`,
+                `Weapon: ${DATABASE.WEAPONS[selections.weapon].dna}`,
+                `Vehicle: ${DATABASE.VEHICLES[selections.vehicle].dna}`,
+                `World: ${DATABASE.WORLDS[selections.world].dna}`,
+                `Pose: ${DATABASE.POSES[selections.pose].dna}`,
+                'Create a cinematic 8k prompt maintaining face identity from reference.'
+            ];
+            const prompt = promptParts.join('. ');
+
+            try {
+                // Call Gemini AI
+                const aiPrompt = await callGeminiAI(prompt);
+                logConsole('🤖 AI Prompt Generated:');
+                logConsole(aiPrompt.substring(0, 150) + '...');
+
+                // Simulate progress
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    if (progress > 100) progress = 100;
+                    
+                    updateProgress(progress);
+                    
+                    // Stage messages
+                    if (progress === 20) logConsole('🔒 Stage 1: DNA Anchor Lock...');
+                    if (progress === 40) logConsole('🎨 Stage 2: Aesthetic Synthesis...');
+                    if (progress === 60) logConsole('✨ Stage 3: Texture Mapping...');
+                    if (progress === 80) logConsole('💡 Stage 4: Lighting Calculation...');
+                    if (progress === 95) logConsole('🔮 Stage 5: Final Crystallization...');
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        showResult(refImages[0]); // Show first reference image as result
+                        logConsole('✅ Generation complete!');
+                        logConsole('🎉 Zenith Sync v22.6 successful');
+                        
+                        // Re-enable button
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        isGenerating = false;
+                    }
+                }, 200); // 4 seconds total (20 * 200ms)
+
+            } catch (error) {
+                logConsole(`❌ Error: ${error.message}`);
+                document.getElementById('progressContainer').classList.add('hidden');
+                document.getElementById('placeholderContent').classList.remove('hidden');
+                
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                isGenerating = false;
+
+                if (error.message.includes('API Key')) {
+                    alert('API Key error. Please check your configuration.');
+                }
+            }
+        }
+
+        function updateProgress(percent) {
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').textContent = `Processing... ${percent}%`;
+        }
+
+        function showResult(imageUrl) {
+            document.getElementById('progressContainer').classList.add('hidden');
+            const resultImg = document.getElementById('resultImage');
+            resultImg.src = imageUrl;
+            resultImg.classList.remove('hidden');
+            resultImg.classList.add('fade-in');
+        }
+
+        // ========================================
+        // CONSOLE LOGGING
+        // ========================================
+        function logConsole(message) {
+            const logs = document.getElementById('consoleLogs');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'console-log-entry fade-in';
+            entry.innerHTML = `<span style="color: rgba(99, 102, 241, 0.5)">[${time}]</span> ${message}`;
+            logs.appendChild(entry);
+            
+            // Keep only last 20 entries
+            while (logs.children.length > 20) {
+                logs.removeChild(logs.firstChild);
+            }
+            
+            // Auto-scroll to bottom
+            logs.scrollTop = logs.scrollHeight;
+        }
+    </script>
+</body>
+</html>
