@@ -47,20 +47,32 @@ const VeoStudio: React.FC = () => {
     setStatusMessage("Kết nối Veo 3.1 Multi-Ref Engine...");
 
     try {
-      const result = await geminiService.generateVideo(
-        prompt, 
-        aspectRatio, 
-        resolution, 
-        referenceImages,
-        (msg) => setStatusMessage(msg)
-      );
-      setVideoUrl(result);
-      setStatusMessage("Hoàn tất tổng hợp.");
-    } catch (err: any) {
-      setError(err.message || "Lỗi tạo video. Thử lại với API Key hợp lệ.");
-    } finally {
-      setIsGenerating(false);
-    }
+  setStatusMessage("Generating...");
+
+  const res = await fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      prompt,
+      aspectRatio,
+      resolution,
+      referenceImages
+    })
+  });
+
+  if (!res.ok) {
+    throw new Error("API error");
+  }
+
+  const data = await res.json();
+
+  setVideoUrl(data.videoUrl);
+  setStatusMessage("Done");
+} catch (err) {
+  console.error(err);
+  setStatusMessage("Failed");
+}
+
   };
 
   return (
