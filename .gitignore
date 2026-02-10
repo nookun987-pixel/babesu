@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Environment variables - Mikage Security
+.env
+.env.local
+.env.production
+Add .env to gitignore for API key security
