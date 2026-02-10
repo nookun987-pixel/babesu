@@ -4,10 +4,6 @@ import { ChatMessage, AspectRatio } from "../types";
 
 export class GeminiService {
   private async getAI() {
-    const hasKey = await (window as any).aistudio.hasSelectedApiKey();
-    if (!hasKey) {
-      await (window as any).aistudio.openSelectKey();
-    }
     return new GoogleGenAI({ apiKey: process.env.API_KEY });
   }
 
