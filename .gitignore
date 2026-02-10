@@ -27,3 +27,8 @@ dist-ssr
 .env.local
 .env.production
 Add .env to gitignore for API key security
+# Environment variables - API Keys Security
+.env
+.env.local
+.env.production
+Add .env to gitignore for Gemini API key security
