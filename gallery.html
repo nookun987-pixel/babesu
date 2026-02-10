@@ -1,1 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mikage Media Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .media-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .media-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        img, video {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .media-info {
+            padding: 15px;
+        }
+
+        .media-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .media-info p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 50px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive cho mobile */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎨 MIKAGE GALLERY</h1>
+        <p>Beautiful Media Collection</p>
+    </header>
+
+    <div id="app" class="gallery-grid">
+        <div class="loading">⏳ Đang tải dữ liệu...</div>
+    </div>
+
+    <script>
+        // ========================================
+        // PHẦN CẤU HÌNH - BỒ CÓ THỂ THAY ĐỔI
+        // ========================================
+        
+        // Dữ liệu mẫu (Mock Data)
+        // Sau này bồ thay bằng API thật: fetch('https://api.mikage.com/media')
+        const API_MOCK_DATA = [
+            {
+                type: 'image',
+                src: 'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=600',
+                title: 'Sunset Paradise',
+                description: 'Beautiful sunset over the ocean'
+            },
+            {
+                type: 'video',
+                src: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                title: 'Big Buck Bunny',
+                description: 'Animated short film'
+            },
+            {
+                type: 'image',
+                src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600',
+                title: 'Mountain View',
+                description: 'Misty mountain landscape'
+            },
+            {
+                type: 'image',
+                src: 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=600',
+                title: 'City Lights',
+                description: 'Urban night photography'
+            },
+            {
+                type: 'video',
+                src: 'https://www.w3schools.com/html/movie.mp4',
+                title: 'Sample Video',
+                description: 'Demo video clip'
+            },
+            {
+                type: 'image',
+                src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600',
+                title: 'Nature Walk',
+                description: 'Forest path in autumn'
+            }
+        ];
+
+        // ========================================
+        // LOGIC XỬ LÝ - KHÔNG CẦN SỬA
+        // ========================================
+
+        const appContainer = document.getElementById('app');
+
+        function renderMedia(dataList) {
+            // Xóa loading
+            appContainer.innerHTML = '';
+
+            // Render từng item
+            dataList.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'media-item';
+                div.style.animationDelay = `${index * 0.1}s`;
+
+                if (item.type === 'image') {
+                    div.innerHTML = `
+                        <img src="${item.src}" alt="${item.title}" loading="lazy">
+                        <div class="media-info">
+                            <h3>${item.title}</h3>
+                            <p>${item.description}</p>
+                        </div>
+                    `;
+                } else if (item.type === 'video') {
+                    div.innerHTML = `
+                        <video src="${item.src}" controls></video>
+                        <div class="media-info">
+                            <h3>${item.title}</h3>
+                            <p>${item.description}</p>
+                        </div>
+                    `;
+                }
+
+                appContainer.appendChild(div);
+            });
+        }
+
+        // Chờ trang load xong rồi hiển thị
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                renderMedia(API_MOCK_DATA);
+                console.log('✅ Mikage Gallery loaded successfully!');
+            }, 500); // Giả lập loading 0.5s
+        });
+
+        // ========================================
+        // KHI CÓ API THẬT, DÙNG CODE NÀY:
+        // ========================================
+        /*
+        async function loadFromAPI() {
+            try {
+                const response = await fetch('https://api.mikage.com/media');
+                const data = await response.json();
+                renderMedia(data);
+            } catch (error) {
+                appContainer.innerHTML = '<div class="loading">❌ Lỗi tải dữ liệu</div>';
+                console.error('Error:', error);
+            }
+        }
+        
+        window.addEventListener('DOMContentLoaded', loadFromAPI);
+        */
+    </script>
+</body>
+</html>
+Add standalone HTML gallery (no build required)
