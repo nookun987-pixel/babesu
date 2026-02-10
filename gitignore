@@ -1,0 +1,7 @@
+# Bảo mật - Không đẩy file .env lên GitHub
+.env
+
+# Các file hệ thống
+.DS_Store
+node_modules/
+Add .gitignore for security
