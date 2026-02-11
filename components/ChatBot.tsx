@@ -28,7 +28,7 @@ const ChatBot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await geminiService.chat(messages, userMsg);
+      const response = await geminiService.chat(userMsg, messages);
       setMessages(prev => [...prev, { role: 'model', text: response }]);
     } catch (err: any) {
       setMessages(prev => [...prev, { role: 'model', text: `Hệ thống gặp lỗi: ${err.message}` }]);

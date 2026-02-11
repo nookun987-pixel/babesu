@@ -10,39 +10,63 @@ View your app in AI Studio: https://ai.studio/apps/drive/1sNxMcUW0G2QXGeP8e-fKAi
 
 ---
 
-## 🚀 Run Locally
+# 🚀 Mikage Zenith v30.1 - Production Deployment
 
-**Prerequisites:** Node.js (v18+)
+## 📚 Tài liệu Deploy
 
-### Installation Steps:
+- **[🚀 QUICK START](QUICK_START.md)** - Deploy nhanh trong 3 bước
+- **[📖 HƯỚNG DẪN CHI TIẾT (Tiếng Việt)](HUONG_DAN_DEPLOY_VERCEL.md)** - Giải thích từng lệnh
+- **[🔧 DEPLOYMENT GUIDE (English)](DEPLOYMENT.md)** - Full deployment documentation
+- **[🤖 Deploy Script](deploy-vercel.sh)** - Script tự động hóa
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/nookun987-pixel/babesu.git
-   cd babesu
-   ```
+---
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+## Triển khai lên Vercel Pro
 
-3. **Configure environment variables:**
-   ```bash
-   cp .env.example .env.local
-   ```
-   
-   Then open `.env.local` and add your Gemini API key:
-   ```
-   GEMINI_API_KEY=your_actual_api_key_here
-   ```
-   
-   🔑 Get your API key at: https://aistudio.google.com/app/apikey
+### Bước 1: Cài đặt dependencies
+```bash
+npm install
+```
 
-4. **Run the development server:**
-   ```bash
-   npm run dev
-   ```
+### Bước 2: Chạy local development
+```bash
+npm run dev
+```
+
+### Bước 3: Deploy lên Vercel
+
+#### Phương án A: Vercel CLI (Khuyến nghị)
+```bash
+# Cài đặt Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+```
+
+#### Phương án B: GitHub Integration
+1. Kết nối repo với Vercel tại: https://vercel.com/new
+2. Import `nookun987-pixel/babesu`
+3. Framework: Next.js (auto-detect)
+4. Click "Deploy"
+
+### Environment Variables (Tùy chọn)
+Thêm các biến môi trường tại Vercel Dashboard → Settings → Environment Variables:
+
+- `GEMINI_API_KEY` - Google Gemini API key (required for AI features)
+- `GCP_PROJECT_ID` - Google Cloud Project ID (optional)
+- `GCP_BUCKET_NAME` - Storage bucket name (optional)
+- `GCP_CREDENTIALS` - Service account JSON (optional)
+- `OPENAI_API_KEY` - OpenAI API key for advanced features (optional)
+
+### Vercel Pro Features
+- ✅ Unlimited bandwidth
+- ✅ Advanced analytics
+- ✅ Edge Functions
+- ✅ Team collaboration
+- ✅ Priority support
+
+Upgrade tại: https://vercel.com/account/billing
 
 ---
 
@@ -51,21 +75,24 @@ View your app in AI Studio: https://ai.studio/apps/drive/1sNxMcUW0G2QXGeP8e-fKAi
 - ⚠️ **NEVER commit `.env` or `.env.local` files to GitHub**
 - ✅ The `.gitignore` file is configured to protect your API keys
 - ✅ Use `.env.example` as a template for other developers
-- 🔐 When deploying (Vercel, Netlify, etc.), add `GEMINI_API_KEY` in the hosting platform's environment variables settings
+- 🔐 When deploying (Vercel, Netlify, etc.), add environment variables in the hosting platform's settings
 
 ---
 
 ## 📦 Tech Stack
 
-- **Frontend:** React 19 + TypeScript
-- **Styling:** Tailwind CSS
-- **AI:** Google Gemini API
-- **Charts:** Recharts
-- **Icons:** Lucide React
+- **Framework**: Next.js 15
+- **Frontend:** React 18 + TypeScript
+- **Styling**: Tailwind CSS
+- **AI**: Google Gemini API
+- **Icons**: Lucide React
+- **Charts**: Recharts
+- **Deployment**: Vercel Pro
+- **Storage**: Google Cloud Storage (optional)
+- **API**: Serverless Functions
 
 ---
 
 ## 📝 License
 
 MIT License
-Update README with security guidelines and setup instructions
