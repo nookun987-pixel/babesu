@@ -1,6 +1,5 @@
 
 import React, { useState, useReducer, useEffect, useRef } from 'react';
-import { geminiService } from '../services/geminiService';
 import { AspectRatio } from '../types';
 import { 
   Sparkles, Loader2, Upload, X, 
@@ -93,9 +92,24 @@ const ImageForge: React.FC = () => {
         prog = Math.min(95, prog + 3);
         dispatch({ type: 'UPDATE_PROGRESS', payload: prog });
       }, 500);
-      const result = await geminiService.generateImage(state.prompt, aspectRatio, state.refImage ? [state.refImage] : []);
+      
+      const response = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: state.prompt,
+          aspectRatio: aspectRatio,
+          referenceImages: state.refImage ? [state.refImage] : []
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Image generation failed');
+      }
+
+      const data = await response.json();
       clearInterval(progressTimer);
-      dispatch({ type: 'FINISH_RENDER', payload: result });
+      dispatch({ type: 'FINISH_RENDER', payload: data.imageUrl });
     } catch (err: any) {
       dispatch({ type: 'FINISH_RENDER', payload: null });
       alert(err.message || "Lỗi nạp ma trận.");

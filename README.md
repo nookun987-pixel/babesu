@@ -1,71 +1,82 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🎯 Babesu AI Studio
 
-# 🤖 Project Mikage - AI Studio App
+AI Studio Web để render ảnh (Imagen), video (Veo), audio (TTS), và chat (Gemini).
 
-Master production hub powered by Google Gemini AI.
+## 🏗️ Kiến trúc
 
-View your app in AI Studio: https://ai.studio/apps/drive/1sNxMcUW0G2QXGeP8e-fKAiWVt6PsX9I2
+```
+studio/
+├── frontend/    # Vite + React
+└── backend/     # Node + Express
+```
 
----
+## 🚀 Chạy Project
 
-## 🚀 Run Locally
+### Backend:
+```bash
+cd studio/backend
+npm install
+cp .env.example .env
+# Điền API keys vào .env
+npm run dev
+```
 
-**Prerequisites:** Node.js (v18+)
+### Frontend:
+```bash
+cd studio/frontend
+npm install
+npm run dev
+```
 
-### Installation Steps:
+Frontend: http://localhost:5173
+Backend: http://localhost:3001
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/nookun987-pixel/babesu.git
-   cd babesu
-   ```
+## 🔑 Environment Variables
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+Xem `studio/backend/.env.example`
 
-3. **Configure environment variables:**
-   ```bash
-   cp .env.example .env.local
-   ```
-   
-   Then open `.env.local` and add your Gemini API key:
-   ```
-   GEMINI_API_KEY=your_actual_api_key_here
-   ```
-   
-   🔑 Get your API key at: https://aistudio.google.com/app/apikey
+Required variables:
+- `GEMINI_API_KEY` - Your Google Gemini API key (get it at https://aistudio.google.com/app/apikey)
+- `GCP_PROJECT_ID` - Your Google Cloud Project ID (for Imagen API)
 
-4. **Run the development server:**
-   ```bash
-   npm run dev
-   ```
+## 📚 API Models
 
----
+| Loại | Model |
+|------|-------|
+| Text | gemini-2.5-flash |
+| Image | imagen-3.0 |
+| Video | Veo |
+| Audio | TTS model |
 
-## 🔒 Security Best Practices
+## 🔒 Security
 
-- ⚠️ **NEVER commit `.env` or `.env.local` files to GitHub**
-- ✅ The `.gitignore` file is configured to protect your API keys
-- ✅ Use `.env.example` as a template for other developers
-- 🔐 When deploying (Vercel, Netlify, etc.), add `GEMINI_API_KEY` in the hosting platform's environment variables settings
-
----
+- ✅ API keys are stored securely in backend only
+- ✅ Frontend calls backend REST API endpoints
+- ✅ No API keys exposed to client-side code
+- ⚠️ Never commit `.env` files to version control
 
 ## 📦 Tech Stack
 
-- **Frontend:** React 19 + TypeScript
+- **Frontend:** React 19 + TypeScript + Vite
+- **Backend:** Node.js + Express
+- **AI:** Google Gemini API, Imagen 3.0, Veo
 - **Styling:** Tailwind CSS
-- **AI:** Google Gemini API
 - **Charts:** Recharts
 - **Icons:** Lucide React
 
----
+## ⚠️ Important Notes
+
+1. **Imagen 3.0 API**: Currently using REST API placeholder. Will be updated when official SDK is released.
+2. **Veo API**: Waiting for official API access.
+3. **Setup**: Make sure to add `GEMINI_API_KEY` and `GCP_PROJECT_ID` to `studio/backend/.env`
+
+## 📞 Troubleshooting
+
+If you encounter issues:
+- Check if backend is running: `http://localhost:3001/health`
+- Verify API keys are set in `studio/backend/.env`
+- Ensure Vite proxy config is correct in `studio/frontend/vite.config.ts`
 
 ## 📝 License
 
 MIT License
-Update README with security guidelines and setup instructions

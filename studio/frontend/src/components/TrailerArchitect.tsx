@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { geminiService } from '../services/geminiService';
 import { 
   Film, 
   Clapperboard, 
@@ -161,8 +160,28 @@ const TrailerArchitect: React.FC = () => {
     try {
       const context = scenes.map(s => s.label);
       const lastPrompt = scenes[scenes.length - 1]?.prompt || "";
-      const suggestions = await geminiService.suggestNextBeats(lastPrompt, context);
-      setAiSuggestions(suggestions);
+      
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [],
+          userMessage: `Based on the following trailer context: ${context.join(', ')} and last prompt: "${lastPrompt}", suggest 3 creative next beat ideas for the trailer. Return as JSON array with format [{label: "...", prompt: "..."}]`
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('AI suggestion failed');
+      }
+
+      const data = await response.json();
+      // Try to parse the response as JSON, or provide default suggestions
+      try {
+        const suggestions = JSON.parse(data.response);
+        setAiSuggestions(Array.isArray(suggestions) ? suggestions : []);
+      } catch {
+        setAiSuggestions([]);
+      }
     } catch (err) {
       console.error("AI Suggestion failed", err);
     } finally {

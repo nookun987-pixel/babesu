@@ -1,5 +1,5 @@
 {
-  "name": "copy-of-project-mikage-//-master-production-hub",
+  "name": "babesu-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,8 +12,7 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "lucide-react": "0.475.0",
-    "recharts": "2.15.1",
-    "@google/genai": "1.40.0"
+    "recharts": "2.15.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

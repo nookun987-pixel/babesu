@@ -1,6 +1,5 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { geminiService } from '../services/geminiService';
 import { Film, Play, Sparkles, AlertCircle, Download, Upload, Monitor, Settings, Clock, Layers, Plus, Trash2, Fingerprint } from 'lucide-react';
 
 const VeoStudio: React.FC = () => {
@@ -47,9 +46,9 @@ const VeoStudio: React.FC = () => {
     setStatusMessage("Kết nối Veo 3.1 Multi-Ref Engine...");
 
     try {
-  setStatusMessage("Generating...");
+  setStatusMessage("Generating video with Veo API...");
 
-  const res = await fetch("/api/generate", {
+  const res = await fetch("/api/generate-video", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -68,9 +67,10 @@ const VeoStudio: React.FC = () => {
 
   setVideoUrl(data.videoUrl);
   setStatusMessage("Done");
-} catch (err) {
+} catch (err: any) {
   console.error(err);
-  setStatusMessage("Failed");
+  setError(err.message || "Video generation failed");
+  setStatusMessage(`Failed: ${err.message || "Unknown error"}`);
 }
 
   };

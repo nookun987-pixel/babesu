@@ -1,6 +1,5 @@
 
 import React, { useState, useReducer, useEffect } from 'react';
-import { geminiService } from '../services/geminiService';
 import { 
   Sparkles, Loader2, RefreshCw, Lock, Activity, Eye, Waves, Heart, Scan, Terminal as TerminalIcon, Zap, Crown, ShieldCheck, Fingerprint, Layers, Cpu, Box
 } from 'lucide-react';
@@ -103,10 +102,24 @@ const CharacterStudio: React.FC = () => {
         dispatch({ type: 'UPDATE_PROGRESS', payload: p });
       }, 450);
       
-      const result = await geminiService.generateImage(prompt, "16:9", []);
+      const response = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: prompt,
+          aspectRatio: "16:9",
+          referenceImages: []
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Image generation failed');
+      }
+
+      const data = await response.json();
       clearInterval(progressTimer);
       
-      const finalUrl = result || state.visual.url;
+      const finalUrl = data.imageUrl || state.visual.url;
       dispatch({ type: 'FINISH_RENDER', payload: finalUrl });
     } catch (err: any) {
       dispatch({ type: 'FINISH_RENDER', payload: state.visual.url });

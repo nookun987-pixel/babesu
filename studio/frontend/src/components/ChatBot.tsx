@@ -1,7 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Bot, User, Loader2, Sparkles, Terminal } from 'lucide-react';
-import { geminiService } from '../services/geminiService';
 import { ChatMessage } from '../types';
 
 const ChatBot: React.FC = () => {
@@ -28,8 +27,21 @@ const ChatBot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await geminiService.chat(messages, userMsg);
-      setMessages(prev => [...prev, { role: 'model', text: response }]);
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: messages,
+          userMessage: userMsg
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Chat failed');
+      }
+
+      const data = await response.json();
+      setMessages(prev => [...prev, { role: 'model', text: data.response }]);
     } catch (err: any) {
       setMessages(prev => [...prev, { role: 'model', text: `Hệ thống gặp lỗi: ${err.message}` }]);
     } finally {
