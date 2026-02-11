@@ -24,6 +24,10 @@ export default async function generateAudio(req, res) {
 }
 
 async function callTTSAPI(text, voice) {
-  // Placeholder - implement actual TTS API call
+  // TODO: Implement TTS API call
+  // Options:
+  // 1. Google Cloud Text-to-Speech: https://cloud.google.com/text-to-speech/docs/reference/rest
+  // 2. ElevenLabs API: https://api.elevenlabs.io/v1/text-to-speech
+  // Expected parameters: text, voice, audioConfig
   throw new Error('TTS API not yet implemented.');
 }

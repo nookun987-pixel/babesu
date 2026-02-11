@@ -25,6 +25,10 @@ export default async function generateVideo(req, res) {
 }
 
 async function callVeoAPI(prompt, aspectRatio, resolution, referenceImages) {
-  // Placeholder - implement actual Veo API call
+  // TODO: Implement Veo API call once official API is available
+  // Expected structure:
+  // - Endpoint: https://aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/veo-001:predict
+  // - Authentication: OAuth 2.0 access token
+  // - Parameters: prompt, aspectRatio, resolution, referenceImages
   throw new Error('Veo API not yet implemented. Waiting for official API access.');
 }

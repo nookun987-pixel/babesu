@@ -39,6 +39,10 @@ export default async function generateImage(req, res) {
 
 // Helper function cho Imagen 3.0 API
 async function callImagenAPI(prompt, aspectRatio, referenceImages, apiKey) {
+  // TODO: Fix authentication - Google Cloud AI Platform requires OAuth 2.0 tokens, not API keys
+  // This implementation is a placeholder and will need proper authentication
+  // using service account credentials or OAuth 2.0 access tokens
+  
   // Imagen 3.0 REST API endpoint
   const endpoint = `https://aiplatform.googleapis.com/v1/projects/${process.env.GCP_PROJECT_ID}/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict`;
   

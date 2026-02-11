@@ -46,7 +46,7 @@ const VeoStudio: React.FC = () => {
     setStatusMessage("Kết nối Veo 3.1 Multi-Ref Engine...");
 
     try {
-  setStatusMessage("Generating...");
+  setStatusMessage("Generating video with Veo API...");
 
   const res = await fetch("/api/generate-video", {
     method: "POST",
@@ -67,9 +67,10 @@ const VeoStudio: React.FC = () => {
 
   setVideoUrl(data.videoUrl);
   setStatusMessage("Done");
-} catch (err) {
+} catch (err: any) {
   console.error(err);
-  setStatusMessage("Failed");
+  setError(err.message || "Video generation failed");
+  setStatusMessage(`Failed: ${err.message || "Unknown error"}`);
 }
 
   };
