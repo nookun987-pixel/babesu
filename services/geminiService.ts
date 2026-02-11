@@ -38,7 +38,7 @@ class GeminiService {
       }
 
       const data = await response.json();
-      return data.candidates[0]?.content?.parts[0]?.text || 'Không nhận được phản hồi từ AI';
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Không nhận được phản hồi từ AI';
     } catch (error: any) {
       console.error('Gemini API Error:', error);
       throw new Error(error.message || 'Lỗi kết nối với Gemini API');
