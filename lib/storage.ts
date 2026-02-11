@@ -5,8 +5,16 @@
 
 import { Storage } from '@google-cloud/storage';
 
+// Cache storage instance to avoid repeated initialization
+let storageInstance: { storage: Storage; bucket: any } | null = null;
+
 // Initialize GCP Storage (only if credentials are provided)
 export const initStorage = () => {
+  // Return cached instance if available
+  if (storageInstance) {
+    return storageInstance;
+  }
+
   try {
     if (process.env.GCP_PROJECT_ID && process.env.GCP_CREDENTIALS) {
       const storage = new Storage({
@@ -17,7 +25,9 @@ export const initStorage = () => {
       const bucketName = process.env.GCP_BUCKET_NAME || 'mikage-zenith-assets';
       const bucket = storage.bucket(bucketName);
       
-      return { storage, bucket };
+      // Cache the instance
+      storageInstance = { storage, bucket };
+      return storageInstance;
     }
     
     console.log('GCP Storage not configured - using local storage fallback');

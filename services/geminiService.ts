@@ -42,7 +42,11 @@ class GeminiService {
     }
   }
 
-  async generateImage(prompt: string, aspectRatio: string = "16:9", styles: string[] = []): Promise<string> {
+  async generateImage(
+    prompt: string, 
+    aspectRatio: '1:1' | '3:4' | '4:3' | '9:16' | '16:9' = "16:9", 
+    styles: string[] = []
+  ): Promise<string> {
     // Note: Gemini doesn't support image generation directly
     // This is a placeholder for future integration with image generation APIs
     console.log('Image generation requested:', { prompt, aspectRatio, styles });

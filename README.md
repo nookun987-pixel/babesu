@@ -72,7 +72,7 @@ Upgrade tại: https://vercel.com/account/billing
 
 ## 📦 Tech Stack
 
-- **Framework**: Next.js 14
+- **Framework**: Next.js 15
 - **Frontend:** React 18 + TypeScript
 - **Styling**: Tailwind CSS
 - **AI**: Google Gemini API
