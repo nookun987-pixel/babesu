@@ -12,6 +12,15 @@ View your app in AI Studio: https://ai.studio/apps/drive/1sNxMcUW0G2QXGeP8e-fKAi
 
 # 🚀 Mikage Zenith v30.1 - Production Deployment
 
+## 📚 Tài liệu Deploy
+
+- **[🚀 QUICK START](QUICK_START.md)** - Deploy nhanh trong 3 bước
+- **[📖 HƯỚNG DẪN CHI TIẾT (Tiếng Việt)](HUONG_DAN_DEPLOY_VERCEL.md)** - Giải thích từng lệnh
+- **[🔧 DEPLOYMENT GUIDE (English)](DEPLOYMENT.md)** - Full deployment documentation
+- **[🤖 Deploy Script](deploy-vercel.sh)** - Script tự động hóa
+
+---
+
 ## Triển khai lên Vercel Pro
 
 ### Bước 1: Cài đặt dependencies
