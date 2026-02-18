@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Landing Page - Sốt Gỏi Cay</title>
+    <style>
+      :root {
+        --red: #d90429;
+        --dark-red: #a6031f;
+        --black: #0f0f10;
+        --gray: #1e1e22;
+        --light: #f8f8f8;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(160deg, var(--black), #1a0006 60%, #2a000a);
+        color: var(--light);
+        line-height: 1.6;
+      }
+
+      .container {
+        width: min(1100px, 92%);
+        margin: 0 auto;
+      }
+
+      header {
+        min-height: 100vh;
+        display: grid;
+        align-items: center;
+        padding: 3rem 0;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .badge {
+        display: inline-block;
+        background: rgba(217, 4, 41, 0.18);
+        border: 1px solid rgba(217, 4, 41, 0.6);
+        color: #ff7d91;
+        padding: 0.35rem 0.8rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.6rem);
+        line-height: 1.15;
+        margin-bottom: 1rem;
+      }
+
+      h1 span {
+        color: var(--red);
+        text-shadow: 0 0 14px rgba(217, 4, 41, 0.4);
+      }
+
+      .hero p {
+        max-width: 55ch;
+        color: #e8e8e8;
+        margin-bottom: 1.6rem;
+      }
+
+      .buy-btn {
+        display: inline-block;
+        text-decoration: none;
+        color: #fff;
+        background: linear-gradient(135deg, #ff2e53, var(--red));
+        padding: 0.95rem 2rem;
+        border-radius: 10px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        box-shadow: 0 14px 30px rgba(217, 4, 41, 0.45);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .buy-btn:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 20px 35px rgba(217, 4, 41, 0.55);
+      }
+
+      .product-card {
+        background: linear-gradient(170deg, #1f1f23, #121214);
+        border: 1px solid #2f2f34;
+        border-radius: 18px;
+        padding: 1.4rem;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.4);
+      }
+
+      .product-card img {
+        width: 100%;
+        border-radius: 12px;
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        background: #2c2c2c;
+      }
+
+      .product-card h2 {
+        color: #ff4f6e;
+        margin-bottom: 0.5rem;
+        font-size: 1.4rem;
+      }
+
+      .certifications {
+        padding: 3.5rem 0 5rem;
+      }
+
+      .calculator {
+        padding: 0 0 4.5rem;
+      }
+
+      .calculator-box {
+        background: linear-gradient(165deg, #18181b, #101013);
+        border: 1px solid #323238;
+        border-radius: 16px;
+        padding: 1.4rem;
+      }
+
+      .calculator h3 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        margin-bottom: 0.7rem;
+      }
+
+      .calculator p {
+        color: #d8d8d8;
+        margin-bottom: 1rem;
+      }
+
+      .calculator-form {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.8rem;
+      }
+
+      .calculator-form input {
+        width: 100%;
+        padding: 0.85rem 0.9rem;
+        border-radius: 10px;
+        border: 1px solid #3f3f45;
+        background: #151519;
+        color: #fff;
+        font-size: 1rem;
+      }
+
+      .calculator-form button {
+        border: none;
+        border-radius: 10px;
+        background: var(--red);
+        color: #fff;
+        font-weight: 700;
+        padding: 0 1.2rem;
+        cursor: pointer;
+      }
+
+      .result {
+        margin-top: 1rem;
+        background: #141417;
+        border: 1px dashed #43434c;
+        border-left: 4px solid var(--red);
+        border-radius: 10px;
+        padding: 0.9rem;
+        color: #f2f2f2;
+      }
+
+      .result strong {
+        color: #ff6a84;
+      }
+
+      .certifications h3 {
+        font-size: clamp(1.5rem, 3vw, 2.1rem);
+        margin-bottom: 1rem;
+      }
+
+      .certifications p {
+        color: #d8d8d8;
+        margin-bottom: 1.4rem;
+      }
+
+      .cert-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+      }
+
+      .cert-item {
+        background: var(--gray);
+        border: 1px solid #373740;
+        border-left: 4px solid var(--red);
+        padding: 1rem;
+        border-radius: 10px;
+      }
+
+      .cert-item strong {
+        display: block;
+        color: #fff;
+        margin-bottom: 0.35rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 1.4rem 0 2rem;
+        color: #aaaaaa;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 640px) {
+        .calculator-form {
+          grid-template-columns: 1fr;
+        }
+
+        .calculator-form button {
+          padding: 0.75rem 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container hero">
+        <div>
+          <span class="badge">Phiên bản mới 2026</span>
+          <h1>Bùng vị ngon với <span>Sốt Gỏi Cay</span> đậm chuẩn nhà hàng</h1>
+          <p>
+            Công thức cân bằng giữa chua thanh, cay nồng và hậu vị ngọt nhẹ,
+            giúp mọi món gỏi của bạn dậy vị chỉ trong vài phút.
+          </p>
+          <a href="#mua" class="buy-btn">Mua Ngay</a>
+        </div>
+
+        <article class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=800&q=80"
+            alt="Chai sốt gỏi cay"
+          />
+          <h2>Sốt Gỏi Cay Premium</h2>
+          <p>
+            Dung tích: 350ml · Dùng cho gỏi hải sản, gỏi bò, gỏi xoài và salad
+            trộn cay.
+          </p>
+        </article>
+      </div>
+    </header>
+
+    <section class="certifications" id="mua">
+      <div class="container">
+        <h3>Chứng nhận an toàn thực phẩm chuẩn quốc tế</h3>
+        <p>
+          Sản phẩm được sản xuất tại nhà máy đạt tiêu chuẩn toàn cầu, kiểm soát
+          nghiêm ngặt từ nguyên liệu đến đóng gói.
+        </p>
+        <div class="cert-grid">
+          <div class="cert-item">
+            <strong>HACCP</strong>
+            Hệ thống phân tích mối nguy và điểm kiểm soát tới hạn.
+          </div>
+          <div class="cert-item">
+            <strong>ISO 22000</strong>
+            Tiêu chuẩn quốc tế về hệ thống quản lý an toàn thực phẩm.
+          </div>
+          <div class="cert-item">
+            <strong>FDA Compliant</strong>
+            Đáp ứng các yêu cầu về an toàn thực phẩm theo thị trường Hoa Kỳ.
+          </div>
+          <div class="cert-item">
+            <strong>GMP</strong>
+            Thực hành sản xuất tốt, đảm bảo chất lượng đồng nhất từng lô hàng.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="calculator">
+      <div class="container">
+        <div class="calculator-box">
+          <h3>Công cụ tính lượng sốt gỏi</h3>
+          <p>
+            Nhập tổng khối lượng nguyên liệu (gram), hệ thống sẽ gợi ý lượng sốt
+            phù hợp theo tỉ lệ chuẩn 12%.
+          </p>
+          <form class="calculator-form" id="sauceCalculatorForm">
+            <input
+              type="number"
+              id="ingredientWeight"
+              min="1"
+              placeholder="Ví dụ: 800"
+              required
+            />
+            <button type="submit">Tính Ngay</button>
+          </form>
+          <div class="result" id="calculatorResult">
+            Chưa có dữ liệu. Hãy nhập khối lượng để tính lượng sốt.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>© 2026 Sốt Gỏi Cay · Nâng tầm món gỏi Việt</footer>
+
+    <script>
+      const sauceCalculatorForm = document.getElementById(
+        "sauceCalculatorForm",
+      );
+      const ingredientWeightInput = document.getElementById("ingredientWeight");
+      const calculatorResult = document.getElementById("calculatorResult");
+
+      sauceCalculatorForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const ingredientWeight = Number(ingredientWeightInput.value);
+
+        if (!ingredientWeight || ingredientWeight <= 0) {
+          calculatorResult.innerHTML =
+            "Vui lòng nhập khối lượng nguyên liệu hợp lệ lớn hơn 0 gram.";
+          return;
+        }
+
+        const sauceRatio = 0.12;
+        const sauceNeeded = ingredientWeight * sauceRatio;
+        const bottleSize = 350;
+        const bottleCount = Math.ceil(sauceNeeded / bottleSize);
+
+        calculatorResult.innerHTML = `Với <strong>${ingredientWeight.toLocaleString("vi-VN")}g</strong> nguyên liệu, bạn cần khoảng <strong>${sauceNeeded.toLocaleString("vi-VN", { maximumFractionDigits: 0 })}g sốt gỏi</strong> (≈ ${Math.round(sauceNeeded)}ml), tương đương <strong>${bottleCount} chai 350ml</strong>.`;
+      });
+    </script>
+  </body>
+</html>
